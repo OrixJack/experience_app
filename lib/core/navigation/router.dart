@@ -1,6 +1,8 @@
+import 'package:experience_app/features/create_prototype/domain/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/create_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/ecommerce_dashboard_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/personalize_experience.dart';
+import 'package:experience_app/features/create_prototype/presentation/views/product_details_view.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
@@ -20,6 +22,14 @@ final router = GoRouter(
       path: '/ecommerce_dashboard',
       builder: (context, state) => const EcommerceDashboardView(),
     ),
+    GoRoute(
+      name: Routes.productDetails,
+      path: '/product_details',
+      builder: (context, state) {
+        final product = state.extra as ProductModel?;
+        return ProductDetailsView(product: product);
+      },
+    ),
   ],
 );
 
@@ -27,4 +37,5 @@ abstract class Routes {
   static const String createPrototype = 'create_prototype';
   static const String personalizeExperience = 'personalize_experience';
   static const String ecommerceDashboard = 'ecommerce_dashboard';
+  static const String productDetails = 'product_details';
 }

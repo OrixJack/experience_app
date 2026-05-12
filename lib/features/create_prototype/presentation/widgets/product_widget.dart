@@ -9,37 +9,56 @@ class ProductWidget extends ConsumerWidget {
     required this.price,
     required this.imageUrl,
     required this.moneda,
+    required this.onTap,
   });
 
   final String productName;
   final double price;
   final String imageUrl;
   final String moneda;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      decoration: BoxDecoration(color: AppColors.white),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 200,
-            height: 120,
-            color: AppColors.gray,
-            child: Image.network(imageUrl, fit: BoxFit.cover),
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 200,
+                height: 120,
+                child: Image.network(imageUrl, fit: BoxFit.cover),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  productName,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  '$moneda$price',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 10),
-          Text(
-            productName,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            '$moneda$price',
-            style: TextStyle(fontSize: 14, color: AppColors.black),
-          ),
-        ],
+        ),
       ),
     );
   }
