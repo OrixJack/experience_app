@@ -3,30 +3,30 @@ import 'package:experience_app/core/assets/app_fontSize.dart';
 import 'package:experience_app/core/navigation/router.dart';
 import 'package:experience_app/features/create_prototype/presentation/widgets/interest_option_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PersonalizeExperience extends StatelessWidget {
+class PersonalizeExperience extends ConsumerWidget {
   const PersonalizeExperience({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 50),
-                Text(
+                const SizedBox(height: 50),
+                const Text(
                   'Personalise your experience',
                   style: TextStyle(
                     fontSize: AppFontSize.title,
                     fontWeight: AppFontSize.wtitle,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'Choose your interests.',
                   style: TextStyle(
@@ -34,12 +34,12 @@ class PersonalizeExperience extends StatelessWidget {
                     color: AppColors.gray,
                   ),
                 ),
-                SizedBox(height: 30),
-                InterestOptions(),
-                SizedBox(height: 20),
+                const SizedBox(height: 30),
+                const InterestOptions(),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    router.goNamed(Routes.personalizeExperience);
+                    router.goNamed(Routes.ecommerceDashboard);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.btnBlue,
@@ -50,12 +50,14 @@ class PersonalizeExperience extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    minimumSize: const Size(double.infinity, 52),
                   ),
                   child: Text(
                     'Next',
                     style: TextStyle(fontSize: 16, color: AppColors.white),
                   ),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -70,7 +72,7 @@ class InterestOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         InterestOptionWidget(interest: 'User Interface'),
         SizedBox(height: 10),
