@@ -173,10 +173,7 @@ class CategoryCarrousel extends StatelessWidget {
               final product = products[index];
               return ProductWidget(
                 onTap: () {
-                  router.goNamed(
-                    Routes.productDetails,
-                    extra: product,
-                  );
+                  router.goNamed(Routes.productDetails, extra: product);
                 },
                 productName: product.name,
                 price: product.price,

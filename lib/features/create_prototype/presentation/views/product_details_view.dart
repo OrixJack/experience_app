@@ -12,11 +12,7 @@ class ProductDetailsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (product == null) {
-      return Scaffold(
-        body: Center(
-          child: Text('No product found'),
-        ),
-      );
+      return Scaffold(body: Center(child: Text('No product found')));
     }
 
     return Scaffold(
@@ -59,10 +55,7 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
             },
             itemCount: 4,
             itemBuilder: (context, index) {
-              return Image.network(
-                widget.product.imageUrl,
-                fit: BoxFit.cover,
-              );
+              return Image.network(widget.product.imageUrl, fit: BoxFit.cover);
             },
           ),
         ),
@@ -157,10 +150,7 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
           const SizedBox(height: 8),
           Text(
             '${widget.product.moneda}${widget.product.price.toStringAsFixed(2)}',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
           Text(
@@ -174,10 +164,7 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
           const SizedBox(height: 30),
           const Text(
             'Size',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -199,11 +186,15 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: isSelected ? AppColors.btnBlue : Colors.grey[300]!,
+                        color: isSelected
+                            ? AppColors.btnBlue
+                            : Colors.grey[300]!,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(8),
-                      color: isSelected ? AppColors.btnBlue : Colors.transparent,
+                      color: isSelected
+                          ? AppColors.btnBlue
+                          : Colors.transparent,
                     ),
                     child: Center(
                       child: Text(
@@ -223,10 +214,7 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
           const SizedBox(height: 30),
           const Text(
             'Color',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           SizedBox(
