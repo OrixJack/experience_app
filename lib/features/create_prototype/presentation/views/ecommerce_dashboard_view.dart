@@ -7,6 +7,7 @@ import 'package:experience_app/features/create_prototype/presentation/providers/
 import 'package:experience_app/features/create_prototype/presentation/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class EcommerceDashboardView extends ConsumerWidget {
   const EcommerceDashboardView({super.key});
@@ -35,29 +36,19 @@ class IconNavigationWithCart extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartCount = ref.watch(cartCountProvider);
+    final cartCount = ref.watch(cartProvider).products.length;
     return Row(
       children: [
         const SizedBox(width: 30),
-        IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Image.asset(AppIcons.search),
-        ),
+        IconButton(onPressed: () {}, icon: Image.asset(AppIcons.search)),
         const SizedBox(width: 30),
-        IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Image.asset(AppIcons.favorite),
-        ),
+        IconButton(onPressed: () {}, icon: Image.asset(AppIcons.favorite)),
         const SizedBox(width: 30),
         Stack(
           children: [
             IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                router.goNamed(Routes.cart);
               },
               icon: Image.asset(AppIcons.shoppingCart),
             ),
@@ -112,11 +103,11 @@ class ItemsCarrousel extends StatelessWidget {
             height: 150,
             width: MediaQuery.of(context).size.width * 1,
             margin: const EdgeInsets.symmetric(horizontal: 1),
-            decoration: BoxDecoration(color: AppColors.blueSky),
+            decoration: const BoxDecoration(color: AppColors.blueSky),
             child: Center(
               child: Text(
                 'Item ${index + 1}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: AppFontSize.body,
                   color: AppColors.black,
                   fontWeight: FontWeight.bold,
@@ -156,7 +147,7 @@ class CategoryCarrousel extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               color: AppColors.black,
               fontWeight: FontWeight.w700,

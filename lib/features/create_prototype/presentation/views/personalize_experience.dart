@@ -27,7 +27,7 @@ class PersonalizeExperience extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
+                const Text(
                   'Choose your interests.',
                   style: TextStyle(
                     fontSize: AppFontSize.body,
@@ -52,7 +52,7 @@ class PersonalizeExperience extends ConsumerWidget {
                     ),
                     minimumSize: const Size(double.infinity, 52),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Next',
                     style: TextStyle(fontSize: 16, color: AppColors.white),
                   ),

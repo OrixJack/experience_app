@@ -44,7 +44,7 @@ class InterestOptionWidget extends ConsumerWidget {
                 ),
               ),
               if (isSelected)
-                Icon(Icons.check, color: AppColors.btnBlue, size: 20),
+                const Icon(Icons.check, color: AppColors.btnBlue, size: 20),
             ],
           ),
         ),

@@ -49,7 +49,7 @@ class ProductWidget extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   '$moneda$price',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     color: AppColors.black,
                     fontWeight: FontWeight.w700,

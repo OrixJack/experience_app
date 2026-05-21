@@ -11,16 +11,19 @@ part of 'product_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$ProductModel {
 
- String get name; double get price; String get imageUrl; String get moneda; String get description; List<String> get sizes; List<Color> get colors;
+ String get name; double get price; String get imageUrl; String get moneda; String get description; List<String> get sizes; List<String> get colors;
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $ProductModelCopyWith<ProductModel> get copyWith => _$ProductModelCopyWithImpl<ProductModel>(this as ProductModel, _$identity);
 
+  /// Serializes this ProductModel to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductModel&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.moneda, moneda) || other.moneda == moneda)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.sizes, sizes)&&const DeepCollectionEquality().equals(other.colors, colors));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,name,price,imageUrl,moneda,description,const DeepCollectionEquality().hash(sizes),const DeepCollectionEquality().hash(colors));
 
@@ -45,7 +48,7 @@ abstract mixin class $ProductModelCopyWith<$Res>  {
   factory $ProductModelCopyWith(ProductModel value, $Res Function(ProductModel) _then) = _$ProductModelCopyWithImpl;
 @useResult
 $Res call({
- String name, double price, String imageUrl, String moneda, String description, List<String> sizes, List<Color> colors
+ String name, double price, String imageUrl, String moneda, String description, List<String> sizes, List<String> colors
 });
 
 
@@ -71,7 +74,7 @@ as String,moneda: null == moneda ? _self.moneda : moneda // ignore: cast_nullabl
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,sizes: null == sizes ? _self.sizes : sizes // ignore: cast_nullable_to_non_nullable
 as List<String>,colors: null == colors ? _self.colors : colors // ignore: cast_nullable_to_non_nullable
-as List<Color>,
+as List<String>,
   ));
 }
 
@@ -156,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  double price,  String imageUrl,  String moneda,  String description,  List<String> sizes,  List<Color> colors)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  double price,  String imageUrl,  String moneda,  String description,  List<String> sizes,  List<String> colors)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductModel() when $default != null:
 return $default(_that.name,_that.price,_that.imageUrl,_that.moneda,_that.description,_that.sizes,_that.colors);case _:
@@ -177,7 +180,7 @@ return $default(_that.name,_that.price,_that.imageUrl,_that.moneda,_that.descrip
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  double price,  String imageUrl,  String moneda,  String description,  List<String> sizes,  List<Color> colors)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  double price,  String imageUrl,  String moneda,  String description,  List<String> sizes,  List<String> colors)  $default,) {final _that = this;
 switch (_that) {
 case _ProductModel():
 return $default(_that.name,_that.price,_that.imageUrl,_that.moneda,_that.description,_that.sizes,_that.colors);case _:
@@ -197,7 +200,7 @@ return $default(_that.name,_that.price,_that.imageUrl,_that.moneda,_that.descrip
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  double price,  String imageUrl,  String moneda,  String description,  List<String> sizes,  List<Color> colors)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  double price,  String imageUrl,  String moneda,  String description,  List<String> sizes,  List<String> colors)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductModel() when $default != null:
 return $default(_that.name,_that.price,_that.imageUrl,_that.moneda,_that.description,_that.sizes,_that.colors);case _:
@@ -209,11 +212,11 @@ return $default(_that.name,_that.price,_that.imageUrl,_that.moneda,_that.descrip
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _ProductModel implements ProductModel {
-  const _ProductModel({required this.name, required this.price, required this.imageUrl, required this.moneda, required this.description, required final  List<String> sizes, required final  List<Color> colors}): _sizes = sizes,_colors = colors;
-  
+  const _ProductModel({required this.name, required this.price, required this.imageUrl, required this.moneda, required this.description, required final  List<String> sizes, required final  List<String> colors}): _sizes = sizes,_colors = colors;
+  factory _ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
 
 @override final  String name;
 @override final  double price;
@@ -227,8 +230,8 @@ class _ProductModel implements ProductModel {
   return EqualUnmodifiableListView(_sizes);
 }
 
- final  List<Color> _colors;
-@override List<Color> get colors {
+ final  List<String> _colors;
+@override List<String> get colors {
   if (_colors is EqualUnmodifiableListView) return _colors;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_colors);
@@ -241,14 +244,17 @@ class _ProductModel implements ProductModel {
 @pragma('vm:prefer-inline')
 _$ProductModelCopyWith<_ProductModel> get copyWith => __$ProductModelCopyWithImpl<_ProductModel>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$ProductModelToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductModel&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.moneda, moneda) || other.moneda == moneda)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._sizes, _sizes)&&const DeepCollectionEquality().equals(other._colors, _colors));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,name,price,imageUrl,moneda,description,const DeepCollectionEquality().hash(_sizes),const DeepCollectionEquality().hash(_colors));
 
@@ -265,7 +271,7 @@ abstract mixin class _$ProductModelCopyWith<$Res> implements $ProductModelCopyWi
   factory _$ProductModelCopyWith(_ProductModel value, $Res Function(_ProductModel) _then) = __$ProductModelCopyWithImpl;
 @override @useResult
 $Res call({
- String name, double price, String imageUrl, String moneda, String description, List<String> sizes, List<Color> colors
+ String name, double price, String imageUrl, String moneda, String description, List<String> sizes, List<String> colors
 });
 
 
@@ -291,7 +297,7 @@ as String,moneda: null == moneda ? _self.moneda : moneda // ignore: cast_nullabl
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,sizes: null == sizes ? _self._sizes : sizes // ignore: cast_nullable_to_non_nullable
 as List<String>,colors: null == colors ? _self._colors : colors // ignore: cast_nullable_to_non_nullable
-as List<Color>,
+as List<String>,
   ));
 }
 

@@ -1,7 +1,9 @@
 import 'package:experience_app/core/assets/app_colors.dart';
+import 'package:experience_app/features/create_prototype/domain/models/product_in_cart_model.dart';
 import 'package:experience_app/features/create_prototype/domain/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/providers/cart_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:experience_app/core/navigation/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductDetailsView extends ConsumerWidget {
@@ -12,7 +14,7 @@ class ProductDetailsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (product == null) {
-      return Scaffold(body: Center(child: Text('No product found')));
+      return const Scaffold(body: Center(child: Text('No product found')));
     }
 
     return Scaffold(
@@ -64,10 +66,10 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
           left: 20,
           child: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              router.goNamed(Routes.ecommerceDashboard);
             },
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),
@@ -254,7 +256,17 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
             height: 56,
             child: ElevatedButton(
               onPressed: () {
-                ref.read(cartCountProvider.notifier).state++;
+                final newProduct = ProductInCartModel(
+                  product: widget.product,
+                  quantity: 1,
+                  selectedSize: _selectedSize,
+                  selectedColor: _selectedColor.toString(),
+                  tax: 0,
+                  discount: 0,
+                  subtotal: widget.product.price,
+                  totalPrice: widget.product.price,
+                );
+                ref.read(cartProvider.notifier).addProductToCart(newProduct);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Added to bag!'),
@@ -262,7 +274,7 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
                   ),
                 );
                 Future.delayed(const Duration(milliseconds: 500), () {
-                  Navigator.pop(context);
+                  router.goNamed(Routes.ecommerceDashboard);
                 });
               },
               style: ElevatedButton.styleFrom(

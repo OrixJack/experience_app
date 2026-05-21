@@ -13,32 +13,32 @@ class CreateView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Image(
-            image: AssetImage('assets/image1.jpg'),
+            image: const AssetImage('assets/image1.jpg'),
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.60,
             fit: BoxFit.cover,
           ),
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                Text(
+                const Text(
                   'Create a Prototype in just a few minutes',
                   style: TextStyle(
                     fontSize: AppFontSize.title,
                     fontWeight: AppFontSize.wtitle,
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Enjoy these pre-made components and worry only about creating the best products ever.',
                   style: TextStyle(
                     fontSize: AppFontSize.body,
                     color: AppColors.gray,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     router.goNamed(Routes.personalizeExperience);
@@ -53,7 +53,7 @@ class CreateView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Next',
                     style: TextStyle(fontSize: 16, color: AppColors.white),
                   ),

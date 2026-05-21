@@ -1,4 +1,5 @@
 import 'package:experience_app/features/create_prototype/domain/models/product_model.dart';
+import 'package:experience_app/features/create_prototype/presentation/views/cart_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/create_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/ecommerce_dashboard_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/personalize_experience.dart';
@@ -30,6 +31,13 @@ final router = GoRouter(
         return ProductDetailsView(product: product);
       },
     ),
+    GoRoute(
+      name: Routes.cart,
+      path: '/cart',
+      builder: (context, state) {
+        return const CartView();
+      },
+    ),
   ],
 );
 
@@ -38,4 +46,5 @@ abstract class Routes {
   static const String personalizeExperience = 'personalize_experience';
   static const String ecommerceDashboard = 'ecommerce_dashboard';
   static const String productDetails = 'product_details';
+  static const String cart = 'cart';
 }
