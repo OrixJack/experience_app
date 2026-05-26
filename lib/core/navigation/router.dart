@@ -2,6 +2,7 @@ import 'package:experience_app/features/create_prototype/data/models/product_mod
 import 'package:experience_app/features/create_prototype/presentation/views/cart_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/create_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/ecommerce_dashboard_view.dart';
+import 'package:experience_app/features/create_prototype/presentation/views/payment_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/personalize_experience.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/product_details_view.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +39,13 @@ final router = GoRouter(
         return const CartView();
       },
     ),
+    GoRoute(
+      name: Routes.payment,
+      path: '/payment',
+      builder: (context, state) {
+        return const PaymentView();
+      },
+    ),
   ],
 );
 
@@ -47,4 +55,5 @@ abstract class Routes {
   static const String ecommerceDashboard = 'ecommerce_dashboard';
   static const String productDetails = 'product_details';
   static const String cart = 'cart';
+  static const String payment = 'payment';
 }

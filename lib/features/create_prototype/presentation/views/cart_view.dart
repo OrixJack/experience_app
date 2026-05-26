@@ -17,7 +17,7 @@ class CartView extends ConsumerWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.blue),
           onPressed: () => router.goNamed(Routes.ecommerceDashboard),
         ),
         title: const Text(
@@ -119,10 +119,7 @@ class CartView extends ConsumerWidget {
                 elevation: 0,
               ),
               onPressed: () {
-                // Implementar lógica de checkout
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Proceeding to checkout...')),
-                );
+                router.goNamed(Routes.payment);
               },
               child: const Text(
                 'Checkout',
