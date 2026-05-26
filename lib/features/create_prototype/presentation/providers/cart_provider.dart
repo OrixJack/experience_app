@@ -1,16 +1,51 @@
 import 'package:experience_app/features/create_prototype/data/data_sources/local_cart_data_source.dart';
-import 'package:experience_app/features/create_prototype/domain/models/product_in_cart_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/product_in_cart_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/states/cart_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final cartCountProvider = StateProvider<int>((ref) => 0);
 
+// Provider simple para SharedPreferences
+final sharedPreferencesProvider = FutureProvider<SharedPreferences>((
+  ref,
+) async {
+  return await SharedPreferences.getInstance();
+});
+
 final cartProvider = StateNotifierProvider<CartNotifier, CartState>((ref) {
-  return CartNotifier();
+  return CartNotifier(ref);
 });
 
 class CartNotifier extends StateNotifier<CartState> {
-  CartNotifier() : super(const CartState());
+  final Ref ref;
+  LocalCartDataSource? _dataSource;
+
+  CartNotifier(this.ref) : super(const CartState()) {
+    _initializeAndLoad();
+  }
+
+  Future<void> _initializeAndLoad() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _dataSource = LocalCartDataSource(prefs);
+
+      // Cargar datos guardados
+      final savedProducts = await _dataSource!.getCartData();
+      _updateState(savedProducts);
+    } catch (e) {
+      print('Error inicializando carrito: $e');
+    }
+  }
+
+  Future<void> _saveCart() async {
+    if (_dataSource == null) return;
+    try {
+      await _dataSource!.saveCartData(state.products);
+    } catch (e) {
+      print('Error guardando carrito: $e');
+    }
+  }
 
   void addProductToCart(ProductInCartModel product) {
     final existingProduct = state.products
@@ -27,9 +62,7 @@ class CartNotifier extends StateNotifier<CartState> {
     } else {
       final updatedProducts = [...state.products, product];
       _updateState(updatedProducts);
-
-      //guardar en shared preferences
-      LocalCartDataSource.saveCartData(updatedProducts);
+      _saveCart();
     }
   }
 
@@ -51,6 +84,7 @@ class CartNotifier extends StateNotifier<CartState> {
     }).toList();
 
     _updateState(updatedProducts);
+    _saveCart();
   }
 
   void decreaseQuantity(ProductInCartModel product) {
@@ -77,6 +111,7 @@ class CartNotifier extends StateNotifier<CartState> {
         .toList();
 
     _updateState(updatedProducts);
+    _saveCart();
   }
 
   void removeProduct(ProductInCartModel product) {
@@ -87,6 +122,7 @@ class CartNotifier extends StateNotifier<CartState> {
     }).toList();
 
     _updateState(updatedProducts);
+    _saveCart();
   }
 
   void _updateState(List<ProductInCartModel> products) {
@@ -118,5 +154,8 @@ class CartNotifier extends StateNotifier<CartState> {
 
   void clearCart() {
     state = const CartState();
+    if (_dataSource != null) {
+      _dataSource!.clearCartData();
+    }
   }
 }

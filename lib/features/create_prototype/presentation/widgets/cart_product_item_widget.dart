@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:experience_app/features/create_prototype/domain/models/product_in_cart_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/product_in_cart_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/providers/cart_provider.dart';
 
 class CartProductItemWidget extends ConsumerWidget {

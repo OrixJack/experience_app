@@ -1,4 +1,4 @@
-import 'package:experience_app/features/create_prototype/domain/models/product_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/cart_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/create_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/ecommerce_dashboard_view.dart';

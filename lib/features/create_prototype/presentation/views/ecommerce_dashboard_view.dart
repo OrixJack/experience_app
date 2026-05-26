@@ -2,12 +2,12 @@ import 'package:experience_app/core/assets/app_colors.dart';
 import 'package:experience_app/core/assets/app_fontSize.dart';
 import 'package:experience_app/core/assets/app_icons.dart';
 import 'package:experience_app/core/navigation/router.dart';
-import 'package:experience_app/features/create_prototype/domain/models/product_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
+import 'package:experience_app/features/create_prototype/data/repositories/products_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/presentation/providers/cart_provider.dart';
 import 'package:experience_app/features/create_prototype/presentation/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class EcommerceDashboardView extends ConsumerWidget {
   const EcommerceDashboardView({super.key});
@@ -121,25 +121,21 @@ class ItemsCarrousel extends StatelessWidget {
   }
 }
 
-class CategoryCarrousel extends StatelessWidget {
+final productsProvider = FutureProvider.autoDispose<List<ProductModel>>((
+  ref,
+) async {
+  return ProductsRepositoryImpl().fetchProducts();
+});
+
+class CategoryCarrousel extends ConsumerWidget {
   CategoryCarrousel({super.key, required this.title});
 
   final String title;
-  final List<ProductModel> products = List.generate(
-    10,
-    (index) => ProductModel(
-      name: 'Product $index',
-      price: 10.0 + index,
-      imageUrl: 'assets/product_default.png',
-      moneda: 'Q',
-      description: 'Description for product $index',
-      sizes: ['S', 'M', 'L'],
-      colors: [Colors.red, Colors.green, Colors.blue],
-    ),
-  );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productsAsyncValue = ref.watch(productsProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -157,21 +153,25 @@ class CategoryCarrousel extends StatelessWidget {
         const SizedBox(height: 20),
         SizedBox(
           height: 189,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return ProductWidget(
-                onTap: () {
-                  router.goNamed(Routes.productDetails, extra: product);
-                },
-                productName: product.name,
-                price: product.price,
-                imageUrl: product.imageUrl,
-                moneda: product.moneda,
-              );
-            },
+          child: productsAsyncValue.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stackTrace) => Center(child: Text('Error: $error')),
+            data: (products) => ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return ProductWidget(
+                  onTap: () {
+                    router.goNamed(Routes.productDetails, extra: product);
+                  },
+                  productName: product.name,
+                  price: product.price,
+                  imageUrl: product.imageUrl,
+                  moneda: product.moneda,
+                );
+              },
+            ),
           ),
         ),
       ],

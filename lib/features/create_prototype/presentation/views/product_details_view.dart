@@ -1,6 +1,6 @@
 import 'package:experience_app/core/assets/app_colors.dart';
-import 'package:experience_app/features/create_prototype/domain/models/product_in_cart_model.dart';
-import 'package:experience_app/features/create_prototype/domain/models/product_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/product_in_cart_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/providers/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:experience_app/core/navigation/router.dart';
@@ -117,7 +117,21 @@ class ProductDetailsContent extends ConsumerStatefulWidget {
 
 class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
   late String _selectedSize;
-  late Color _selectedColor;
+  late String _selectedColor;
+
+  // Mapeo de nombres de colores a Color objects
+  final Map<String, Color> colorMap = {
+    'red': Colors.red,
+    'green': Colors.green,
+    'blue': Colors.blue,
+    'black': Colors.black,
+    'white': Colors.white,
+    'yellow': Colors.yellow,
+    'orange': Colors.orange,
+    'purple': Colors.purple,
+    'pink': Colors.pink,
+    'cyan': Colors.cyan,
+  };
 
   @override
   void initState() {
@@ -225,12 +239,14 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
               scrollDirection: Axis.horizontal,
               itemCount: widget.product.colors.length,
               itemBuilder: (context, index) {
-                final color = widget.product.colors[index];
-                final isSelected = color == _selectedColor;
+                final colorName = widget.product.colors[index];
+                final isSelected = colorName == _selectedColor;
+                final colorValue =
+                    colorMap[colorName.toLowerCase()] ?? Colors.grey;
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedColor = color;
+                      _selectedColor = colorName;
                     });
                   },
                   child: Container(
@@ -239,7 +255,7 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: color,
+                      color: colorValue,
                       border: Border.all(
                         color: isSelected ? AppColors.btnBlue : Colors.grey,
                         width: isSelected ? 3 : 1,
