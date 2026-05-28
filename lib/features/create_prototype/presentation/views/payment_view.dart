@@ -35,21 +35,26 @@ class PaymentView extends ConsumerWidget {
         // Aquí iría la implementación del proceso de pago, como formulario de tarjeta, resumen de compra, etc.
         // Por simplicidad, solo mostramos un mensaje de éxito.
         children: const [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
-              StepsPayment(),
-              SizedBox(height: 10),
-              Text(
-                'Payment Successful!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Thank you for your purchase.',
-                style: TextStyle(fontSize: 16, color: AppColors.gray),
-              ),
-            ],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StepsPayment(),
+                SizedBox(height: 10),
+                Text(
+                  'Choose a payment method',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'You won\'t be charged until you review the order on the next page',
+                  style: TextStyle(fontSize: 12, color: AppColors.gray),
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            ),
           ),
         ],
       ),
