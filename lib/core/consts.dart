@@ -1,6 +1,7 @@
 abstract class Consts {
   /// Shared preferences keys
   static const String cartDataKey = 'cart_data';
+  static const String creditCardsDataKey = 'credit_cards_data';
 
   /// API endpoints
   static String paymentEndpoint =

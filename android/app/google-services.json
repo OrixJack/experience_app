@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "85961217089",
+    "project_id": "jo-experience-app",
+    "storage_bucket": "jo-experience-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85961217089:android:49b114b2af4c261d47e2c0",
+        "android_client_info": {
+          "package_name": "com.devops.experience_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDt4kUCUFJSb-ehoqR04H-ylldDW4zTgOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

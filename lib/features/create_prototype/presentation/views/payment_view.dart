@@ -1,7 +1,11 @@
 import 'package:experience_app/core/assets/app_colors.dart';
 import 'package:experience_app/core/navigation/router.dart';
 import 'package:experience_app/features/create_prototype/data/models/credit_card_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/payment_payload_model.dart';
+import 'package:experience_app/features/create_prototype/data/repositories/process_payment_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/presentation/providers/cart_provider.dart';
+import 'package:experience_app/features/create_prototype/presentation/providers/credit_card_provider.dart';
+import 'package:experience_app/features/create_prototype/presentation/widgets/add_credit_card_modal.dart';
 import 'package:experience_app/features/create_prototype/presentation/widgets/credit_card_widget.dart';
 import 'package:experience_app/features/create_prototype/presentation/widgets/step_payment_widget.dart';
 import 'package:flutter/material.dart';
@@ -16,20 +20,21 @@ class PaymentView extends ConsumerStatefulWidget {
 
 class _PaymentViewState extends ConsumerState<PaymentView> {
   String selectedPaymentMethod = 'credit_card';
-  late CreditCardModel selectedCard;
+  CreditCardModel? selectedCard;
   bool sameAsShippingAddress = true;
+  bool isLoading = false;
 
   // Datos de prueba (en el futuro vendrán del datasource)
-  List<CreditCardModel> creditCards = [
+  List<CreditCardModel> initialCards = [
     const CreditCardModel(
-      cardNumber: '**** **** **** 1234',
-      cardHolderName: 'Mastercard',
+      cardNumber: '4242 4242 4242 2211',
+      cardHolderName: 'No Funciona',
       expiryDate: '12/25',
       currency: 'USD',
     ),
     const CreditCardModel(
-      cardNumber: '**** **** **** 9876',
-      cardHolderName: 'Visa',
+      cardNumber: '4111 1111 1111 1111',
+      cardHolderName: 'Con 50 de fondo',
       expiryDate: '11/26',
       currency: 'USD',
     ),
@@ -38,12 +43,23 @@ class _PaymentViewState extends ConsumerState<PaymentView> {
   @override
   void initState() {
     super.initState();
-    selectedCard = creditCards.first;
+    // Se inicializará cuando se acceda al primer widget que lo use
   }
 
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(cartProvider);
+    final creditCards = List<CreditCardModel>.from({
+      ...initialCards,
+      ...ref.watch(creditCardProvider),
+    });
+
+    // Establecer la tarjeta seleccionada si no hay una seleccionada
+    if (creditCards.isNotEmpty && selectedCard == null) {
+      selectedCard = creditCards.first;
+    } else if (selectedCard != null && !creditCards.contains(selectedCard)) {
+      selectedCard = creditCards.isNotEmpty ? creditCards.first : null;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -92,16 +108,39 @@ class _PaymentViewState extends ConsumerState<PaymentView> {
           ),
           if (selectedPaymentMethod == 'credit_card') ...[
             const SizedBox(height: 12),
-            CreditCardOption(
-              cards: creditCards,
-              onCardSelected: (card) {
-                setState(() {
-                  selectedCard = card;
-                });
-              },
-            ),
+            if (creditCards.isEmpty)
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[300]!),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  'No credit cards added yet. Tap "Add new card" to get started.',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+              )
+            else
+              CreditCardOption(
+                cards: creditCards,
+                onCardSelected: (card) {
+                  setState(() {
+                    selectedCard = card;
+                  });
+                },
+              ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => AddCreditCardModal(
+                    onCardAdded: () {
+                      setState(() {});
+                    },
+                  ),
+                );
+              },
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12.0),
                 child: Text(
@@ -150,23 +189,34 @@ class _PaymentViewState extends ConsumerState<PaymentView> {
           SizedBox(
             height: 48,
             child: ElevatedButton(
-              onPressed: () {
-                _processPayment();
-              },
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      _processPayment(cartState);
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
-                'Process Payment',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: isLoading
+                  ? const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Text(
+                      'Process Payment',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
             ),
           ),
           const SizedBox(height: 30),
@@ -203,14 +253,75 @@ class _PaymentViewState extends ConsumerState<PaymentView> {
     );
   }
 
-  void _processPayment() {
-    print('Procesando pago con: $selectedPaymentMethod');
-    if (selectedPaymentMethod == 'credit_card') {
-      print('Tarjeta seleccionada: ${selectedCard.cardHolderName}');
-      print('Número: ${selectedCard.cardNumber}');
-      print('Vencimiento: ${selectedCard.expiryDate}');
+  void _processPayment(cartState) {
+    if (cartState.products.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('El carrito está vacío'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
     }
-    print('Dirección de facturación igual a envío: $sameAsShippingAddress');
+
+    // Validar que haya una tarjeta seleccionada
+    if (selectedCard == null || selectedCard!.cardNumber.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor selecciona una tarjeta de crédito'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final PaymentPayloadModel paymentData = PaymentPayloadModel(
+      amount: cartState.totalPrice,
+      cardNumber: selectedCard!.cardNumber,
+      currency: selectedCard!.currency,
+    );
+
+    // Llamando al datasource para procesar el pago
+    ProcessPaymentRepositoryImpl()
+        .processPayment(paymentData)
+        .then((result) {
+          if (result['status'] == 'approved') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(result['message']),
+                backgroundColor: Colors.green,
+              ),
+            );
+            // Limpiar el carrito
+            ref.read(cartProvider.notifier).clearCart();
+            router.goNamed(Routes.ecommerceDashboard);
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(result['message']),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        })
+        .catchError((error) {
+          setState(() {
+            isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $error'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        });
   }
 }
 
@@ -274,70 +385,12 @@ class _CreditCardOptionState extends State<CreditCardOption> {
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 12.0),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.blue[50] : Colors.grey[50],
-                border: Border.all(
-                  color: isSelected ? Colors.blue : Colors.grey[300]!,
-                  width: isSelected ? 2 : 1,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: Colors.blue.withOpacity(0.2),
-                          blurRadius: 8,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                    : [],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            card.cardHolderName,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            card.cardNumber,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.gray,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (isSelected)
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+            child: CreditCardWidget(
+              cardNumber: card.cardNumber,
+              cardHolderName: card.cardHolderName,
+              expiryDate: card.expiryDate,
+              currency: card.currency,
+              isSelected: isSelected,
             ),
           ),
         );

@@ -4,19 +4,21 @@ import 'package:dio/dio.dart';
 class RemotePaymentDataSource {
   final Dio dioClient;
 
-  RemotePaymentDataSource(this.dioClient);
+  RemotePaymentDataSource({Dio? dioClient}) : dioClient = dioClient ?? Dio();
 
-  Future<bool> payment() async {
+  Future<Map<String, dynamic>> payment(Map<String, dynamic> data) async {
     try {
-      final response = await dioClient.get(Consts.paymentEndpoint);
+      final response = await dioClient.post(Consts.paymentEndpoint, data: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return true;
+        return response.data;
       } else {
-        return false;
+        return {
+          'status': 'error',
+          'message': 'Failed to process payment: ${response.statusCode}',
+        };
       }
     } catch (e) {
-      print('Error in payment request: $e');
-      return false;
+      return {'status': 'error', 'message': 'Failed to process payment: $e'};
     }
   }
 }
