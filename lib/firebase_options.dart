@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'jo-experience-app.firebaseapp.com',
     storageBucket: 'jo-experience-app.firebasestorage.app',
   );
+
 }

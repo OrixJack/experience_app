@@ -1,18 +1,37 @@
+import 'package:experience_app/core/local_storage.dart';
 import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/cart_view.dart';
-import 'package:experience_app/features/create_prototype/presentation/views/create_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/ecommerce_dashboard_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/payment_view.dart';
+import 'package:experience_app/features/users/presentation/providers/login_provider.dart';
+import 'package:experience_app/features/users/presentation/views/login_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/personalize_experience.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/product_details_view.dart';
 import 'package:go_router/go_router.dart';
 
+final localStorage = LocalStorage();
+
 final router = GoRouter(
+  redirect: (context, state) async {
+    final session = await localStorage.getSession();
+    final isLoggedIn = session != null;
+    final isLoginRoute = state.matchedLocation == '/';
+
+    if (isLoggedIn && isLoginRoute) {
+      return '/ecommerce_dashboard';
+    }
+
+    if (!isLoggedIn && !isLoginRoute) {
+      return '/';
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
-      name: Routes.createPrototype,
+      name: Routes.login,
       path: '/',
-      builder: (context, state) => const CreateView(),
+      builder: (context, state) => const LoginView(),
     ),
     GoRoute(
       name: Routes.personalizeExperience,
@@ -56,4 +75,6 @@ abstract class Routes {
   static const String productDetails = 'product_details';
   static const String cart = 'cart';
   static const String payment = 'payment';
+  static const String login = 'login';
+  static const String validateLogin = 'validate_login';
 }
