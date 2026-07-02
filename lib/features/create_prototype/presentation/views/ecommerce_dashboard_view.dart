@@ -40,9 +40,34 @@ class IconNavigationWithCart extends ConsumerWidget {
     return Row(
       children: [
         const SizedBox(width: 30),
-        IconButton(onPressed: () {}, icon: Image.asset(AppIcons.search)),
+        IconButton(
+          onPressed: () {},
+          icon: SizedBox(
+            width: 24,
+            height: 24,
+            child: Image.asset(AppIcons.search, fit: BoxFit.contain),
+          ),
+        ),
         const SizedBox(width: 30),
-        IconButton(onPressed: () {}, icon: Image.asset(AppIcons.favorite)),
+        IconButton(
+          onPressed: () {},
+          icon: SizedBox(
+            width: 24,
+            height: 24,
+            child: Image.asset(AppIcons.favorite, fit: BoxFit.contain),
+          ),
+        ),
+        const SizedBox(width: 30),
+        IconButton(
+          onPressed: () {
+            router.goNamed(Routes.crudProducts);
+          },
+          icon: SizedBox(
+            width: 24,
+            height: 24,
+            child: Image.asset(AppIcons.pencil, fit: BoxFit.contain),
+          ),
+        ),
         const SizedBox(width: 30),
         Stack(
           children: [
@@ -50,7 +75,11 @@ class IconNavigationWithCart extends ConsumerWidget {
               onPressed: () {
                 router.goNamed(Routes.cart);
               },
-              icon: Image.asset(AppIcons.shoppingCart),
+              icon: SizedBox(
+                width: 24,
+                height: 24,
+                child: Image.asset(AppIcons.shoppingCart, fit: BoxFit.contain),
+              ),
             ),
             if (cartCount > 0)
               Positioned(

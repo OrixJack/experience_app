@@ -6,4 +6,12 @@ interface class ProductDataSource {
   Future<List<ProductModel>> getAllProducts() async {
     return [];
   }
+
+  Future<bool> addProduct(ProductModel product) async {
+    return false;
+  }
+
+  Future<bool> editProduct(ProductModel product) async {
+    return false;
+  }
 }

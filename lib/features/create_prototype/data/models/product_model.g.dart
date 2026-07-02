@@ -8,19 +8,25 @@ part of 'product_model.dart';
 
 _ProductModel _$ProductModelFromJson(Map<String, dynamic> json) =>
     _ProductModel(
+      id: json['id'] as String? ?? '',
       name: json['name'] as String,
       price: (json['price'] as num).toDouble(),
       imageUrl: json['imageUrl'] as String,
       moneda: json['moneda'] as String,
       description: json['description'] as String,
-      sizes: (json['sizes'] as List<dynamic>).map((e) => e as String).toList(),
-      colors: (json['colors'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      sizes:
+          (json['sizes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+          const [],
+      colors:
+          (json['colors'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$ProductModelToJson(_ProductModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'price': instance.price,
       'imageUrl': instance.imageUrl,

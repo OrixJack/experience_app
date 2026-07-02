@@ -4,4 +4,5 @@ abstract class AppIcons {
   static const String settings = 'assets/settings.png';
   static const String search = 'assets/icon_search.png';
   static const String favorite = 'assets/icon_favorities.png';
+  static const String pencil = 'assets/icon_pencil.png';
 }

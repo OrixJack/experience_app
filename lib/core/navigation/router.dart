@@ -1,9 +1,9 @@
 import 'package:experience_app/core/local_storage.dart';
 import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/cart_view.dart';
+import 'package:experience_app/features/create_prototype/presentation/views/crud_products_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/ecommerce_dashboard_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/payment_view.dart';
-import 'package:experience_app/features/users/presentation/providers/login_provider.dart';
 import 'package:experience_app/features/users/presentation/views/login_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/personalize_experience.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/product_details_view.dart';
@@ -65,6 +65,13 @@ final router = GoRouter(
         return const PaymentView();
       },
     ),
+    GoRoute(
+      name: Routes.crudProducts,
+      path: '/crud_products',
+      builder: (context, state) {
+        return const CrudProductsView();
+      },
+    ),
   ],
 );
 
@@ -77,4 +84,5 @@ abstract class Routes {
   static const String payment = 'payment';
   static const String login = 'login';
   static const String validateLogin = 'validate_login';
+  static const String crudProducts = 'crud_products';
 }

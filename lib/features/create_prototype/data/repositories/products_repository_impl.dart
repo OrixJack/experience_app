@@ -9,7 +9,16 @@ class ProductsRepositoryImpl extends ProductsRepository {
   @override
   Future<List<ProductModel>> fetchProducts() async {
     final products = await firebaseProductDataSource.getAllProducts();
-    print('fetchProducts retrieved ${products.length} products');
     return List<ProductModel>.from(products);
+  }
+
+  @override
+  Future<bool> addProduct(ProductModel product) async {
+    return await firebaseProductDataSource.addProduct(product);
+  }
+
+  @override
+  Future<bool> editProduct(ProductModel product) async {
+    return await firebaseProductDataSource.editProduct(product);
   }
 }
