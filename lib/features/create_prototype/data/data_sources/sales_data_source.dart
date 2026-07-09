@@ -21,7 +21,15 @@ interface class SalesDataSource {
     );
   }
 
+  Future<List<SaleModel>> historyFailed(String idClient) async {
+    return [];
+  }
+
   Future<bool> addSale(SaleModel sale) async {
+    return false;
+  }
+
+  Future<bool> addSaleError(SaleModel sale) async {
     return false;
   }
 

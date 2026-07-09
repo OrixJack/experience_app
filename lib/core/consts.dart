@@ -12,4 +12,5 @@ abstract class Consts {
   /// Firebase collection names
   static const String salesCollection = 'sales';
   static const String productsCollection = 'products';
+  static const String salesErrorCollection = 'error_sales';
 }

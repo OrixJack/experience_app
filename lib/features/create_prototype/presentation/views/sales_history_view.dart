@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SalesHistoryView extends ConsumerWidget {
-  const SalesHistoryView({super.key});
+  final String status;
+  const SalesHistoryView(this.status, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,16 +28,23 @@ class SalesHistoryView extends ConsumerWidget {
                 },
               ),
               const SizedBox(width: 10),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Text(
-                  'Sales History',
-                  style: TextStyle(
+                  status == 'failed' ? 'Failed Sales History' : 'Sales History',
+                  style: const TextStyle(
                     fontSize: AppFontSize.title,
                     color: Colors.black,
                     fontWeight: AppFontSize.wtitle,
                   ),
                 ),
+              ),
+              const SizedBox(width: 20),
+              IconButton(
+                icon: const Icon(Icons.error, size: 30),
+                onPressed: () {
+                  router.goNamed(Routes.salesHistoryFailed);
+                },
               ),
             ],
           ),
@@ -52,6 +60,9 @@ class SalesHistoryView extends ConsumerWidget {
                     title: Text('Sale ID: ${sale.id}'),
                     subtitle: Text('Client ID: ${sale.idClient}'),
                     trailing: Text('Total: ${sale.total.toStringAsFixed(2)}'),
+                    leading: status == 'failed'
+                        ? const Icon(Icons.error, color: Colors.red)
+                        : null,
                     onTap: () {
                       showModalBottomSheet(
                         context: context,

@@ -287,30 +287,29 @@ class _PaymentViewState extends ConsumerState<PaymentView> {
       currency: selectedCard!.currency,
     );
 
+    //construyendo el modelo de venta para guardar en el historial
+    final finalSale = SaleModel(
+      id: '',
+      idClient: 'client_id',
+      total: cartState.totalPrice,
+      date: DateTime.now().toIso8601String(),
+      moneda: selectedCard!.currency,
+      products: cartState.products,
+      discount: 0.0,
+      totalProducts: cartState.products.length,
+      typePayment: 1, // 1 para tarjeta de crédito
+      last4Digits: int.parse(
+        selectedCard!.cardNumber.substring(selectedCard!.cardNumber.length - 4),
+      ),
+    );
+
     // Llamando al datasource para procesar el pago
     ProcessPaymentRepositoryImpl()
         .processPayment(paymentData)
         .then((result) {
           if (result['status'] == 'approved') {
             //guardar la venta en el historial de ventas
-            SalesRepositoryImpl().addSale(
-              SaleModel(
-                id: '',
-                idClient: 'client_id',
-                total: cartState.totalPrice,
-                date: DateTime.now().toIso8601String(),
-                moneda: selectedCard!.currency,
-                products: cartState.products,
-                discount: 0.0,
-                totalProducts: cartState.products.length,
-                typePayment: 1, // 1 para tarjeta de crédito
-                last4Digits: int.parse(
-                  selectedCard!.cardNumber.substring(
-                    selectedCard!.cardNumber.length - 4,
-                  ),
-                ),
-              ),
-            );
+            SalesRepositoryImpl().addSale(finalSale);
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -322,9 +321,12 @@ class _PaymentViewState extends ConsumerState<PaymentView> {
             ref.read(cartProvider.notifier).clearCart();
             router.goNamed(Routes.ecommerceDashboard);
           } else {
-            setState(() {
-              isLoading = false;
-            });
+            //guardar la venta en el historial de ventas con error
+            final errorSale = finalSale.copyWith(
+              status: 'error',
+              errorMessage: result['message'] ?? 'Unknown error',
+            );
+            SalesRepositoryImpl().addSaleError(errorSale);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(result['message']),

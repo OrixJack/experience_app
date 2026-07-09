@@ -17,6 +17,8 @@ _SaleModel _$SaleModelFromJson(Map<String, dynamic> json) => _SaleModel(
   discount: (json['discount'] as num).toDouble(),
   typePayment: (json['typePayment'] as num).toInt(),
   last4Digits: (json['last4Digits'] as num).toInt(),
+  status: json['status'] as String? ?? 'OK',
+  errorMessage: json['errorMessage'] as String? ?? '',
 );
 
 Map<String, dynamic> _$SaleModelToJson(_SaleModel instance) =>
@@ -31,4 +33,6 @@ Map<String, dynamic> _$SaleModelToJson(_SaleModel instance) =>
       'discount': instance.discount,
       'typePayment': instance.typePayment,
       'last4Digits': instance.last4Digits,
+      'status': instance.status,
+      'errorMessage': instance.errorMessage,
     };

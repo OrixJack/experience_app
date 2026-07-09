@@ -52,6 +52,27 @@ class FirebaseSaleDataSource implements SalesDataSource {
       final querySnapshot = await _firestore
           .collection(Consts.salesCollection)
           .where('idClient', isEqualTo: idClient)
+          .orderBy('date', descending: true)
+          .get();
+
+      final sales = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return SaleModel.fromJson({...data, 'id': doc.id});
+      }).toList();
+
+      return sales;
+    } catch (e) {
+      throw Exception('Error getting Sales from Firestore: $e');
+    }
+  }
+
+  @override
+  Future<List<SaleModel>> historyFailed(String idClient) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(Consts.salesErrorCollection)
+          .where('idClient', isEqualTo: idClient)
+          .orderBy('date', descending: true)
           .get();
 
       final sales = querySnapshot.docs.map((doc) {
@@ -98,6 +119,26 @@ class FirebaseSaleDataSource implements SalesDataSource {
 
       await _firestore
           .collection(Consts.salesCollection)
+          .doc(idHex)
+          .set(serializedJson);
+      return true;
+    } catch (e) {
+      throw Exception('Error adding Sale to Firestore: $e');
+    }
+  }
+
+  @override
+  Future<bool> addSaleError(SaleModel sale) async {
+    try {
+      final idHex = _generateRandomHex(16);
+      final saleWithId = sale.copyWith(id: idHex);
+      final saleJson = saleWithId.toJson();
+
+      // Serializar completamente todos los objetos anidados
+      final serializedJson = _serializeToJson(saleJson);
+
+      await _firestore
+          .collection(Consts.salesErrorCollection)
           .doc(idHex)
           .set(serializedJson);
       return true;

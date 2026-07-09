@@ -12,6 +12,11 @@ class SalesRepositoryImpl extends SalesRepository {
   }
 
   @override
+  Future<List<SaleModel>> getSalesHistoryFailed(String idClient) async {
+    return await firebaseSaleDataSource.historyFailed(idClient);
+  }
+
+  @override
   Future<SaleModel> getSale(String idSale) async {
     return await firebaseSaleDataSource.getSale(idSale);
   }
@@ -19,6 +24,11 @@ class SalesRepositoryImpl extends SalesRepository {
   @override
   Future<bool> addSale(SaleModel sale) async {
     return await firebaseSaleDataSource.addSale(sale);
+  }
+
+  @override
+  Future<bool> addSaleError(SaleModel sale) async {
+    return await firebaseSaleDataSource.addSaleError(sale);
   }
 
   @override

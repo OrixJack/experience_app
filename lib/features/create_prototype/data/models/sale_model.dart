@@ -39,6 +39,8 @@ abstract class SaleModel with _$SaleModel {
     required double discount,
     required int typePayment,
     required int last4Digits,
+    @Default('OK') String status,
+    @Default('') String errorMessage,
   }) = _SaleModel;
 
   factory SaleModel.fromJson(Map<String, dynamic> json) =>

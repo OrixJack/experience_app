@@ -77,7 +77,14 @@ final router = GoRouter(
       name: Routes.salesHistory,
       path: '/sales_history',
       builder: (context, state) {
-        return const SalesHistoryView();
+        return const SalesHistoryView('success');
+      },
+    ),
+    GoRoute(
+      name: Routes.salesHistoryFailed,
+      path: '/sales_history_failed',
+      builder: (context, state) {
+        return const SalesHistoryView('failed');
       },
     ),
   ],
@@ -94,4 +101,5 @@ abstract class Routes {
   static const String validateLogin = 'validate_login';
   static const String crudProducts = 'crud_products';
   static const String salesHistory = 'sales_history';
+  static const String salesHistoryFailed = 'sales_history_failed';
 }
