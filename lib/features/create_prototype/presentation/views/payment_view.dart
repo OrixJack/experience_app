@@ -2,8 +2,6 @@ import 'package:experience_app/core/assets/app_colors.dart';
 import 'package:experience_app/core/navigation/router.dart';
 import 'package:experience_app/features/create_prototype/data/models/credit_card_model.dart';
 import 'package:experience_app/features/create_prototype/data/models/payment_payload_model.dart';
-import 'package:experience_app/features/create_prototype/data/models/product_in_cart_model.dart';
-import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/data/models/sale_model.dart';
 import 'package:experience_app/features/create_prototype/data/repositories/process_payment_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/data/repositories/sales_repository_impl.dart';

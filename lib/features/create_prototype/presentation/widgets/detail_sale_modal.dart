@@ -79,6 +79,7 @@ class _DetailSaleModalState extends ConsumerState<DetailSaleModal> {
                   prefixIcon: const Icon(Icons.key),
                 ),
                 keyboardType: TextInputType.text,
+                readOnly: true,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -92,6 +93,7 @@ class _DetailSaleModalState extends ConsumerState<DetailSaleModal> {
                   prefixIcon: const Icon(Icons.person),
                 ),
                 keyboardType: TextInputType.text,
+                readOnly: true,
               ),
               const SizedBox(height: 16),
               Row(
@@ -106,6 +108,7 @@ class _DetailSaleModalState extends ConsumerState<DetailSaleModal> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      readOnly: true,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -122,6 +125,7 @@ class _DetailSaleModalState extends ConsumerState<DetailSaleModal> {
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
+                      readOnly: true,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -169,6 +173,7 @@ class _DetailSaleModalState extends ConsumerState<DetailSaleModal> {
                           .join(', ') ??
                       '',
                 ),
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Products',
                   hintText: 'No Products',
@@ -177,7 +182,6 @@ class _DetailSaleModalState extends ConsumerState<DetailSaleModal> {
                   ),
                   prefixIcon: const Icon(Icons.shopping_cart),
                 ),
-                readOnly: true,
               ),
               const SizedBox(height: 16),
               SizedBox(
