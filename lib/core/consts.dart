@@ -8,4 +8,8 @@ abstract class Consts {
       "https://processpayment-sfdkfoab2q-uc.a.run.app";
   static String getProductsEndpoint =
       "https://getproducts-sfdkfoab2q-uc.a.run.app/products";
+
+  /// Firebase collection names
+  static const String salesCollection = 'sales';
+  static const String productsCollection = 'products';
 }

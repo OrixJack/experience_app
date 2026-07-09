@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:experience_app/core/consts.dart';
 import 'package:experience_app/features/create_prototype/data/data_sources/product_data_source.dart';
 import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'dart:math';
@@ -22,7 +23,9 @@ class FirebaseProductDataSource implements ProductDataSource {
   @override
   Future<List<ProductModel>> getAllProducts() async {
     try {
-      final querySnapshot = await _firestore.collection('products').get();
+      final querySnapshot = await _firestore
+          .collection(Consts.productsCollection)
+          .get();
 
       final products = querySnapshot.docs.map((doc) {
         final data = doc.data();
@@ -31,7 +34,7 @@ class FirebaseProductDataSource implements ProductDataSource {
 
       return products;
     } catch (e) {
-      throw Exception('Error al obtener productos de Firestore: $e');
+      throw Exception('Error getting products from Firestore: $e');
     }
   }
 
@@ -41,12 +44,12 @@ class FirebaseProductDataSource implements ProductDataSource {
       final idHex = _generateRandomHex(16);
       final productWithId = product.copyWith(id: idHex);
       await _firestore
-          .collection('products')
+          .collection(Consts.productsCollection)
           .doc(idHex)
           .set(productWithId.toJson());
       return true;
     } catch (e) {
-      throw Exception('Error al agregar producto a Firestore: $e');
+      throw Exception('Error adding product to Firestore: $e');
     }
   }
 
@@ -57,12 +60,12 @@ class FirebaseProductDataSource implements ProductDataSource {
         throw Exception('Product ID cannot be empty');
       }
       await _firestore
-          .collection('products')
+          .collection(Consts.productsCollection)
           .doc(product.id)
           .update(product.toJson());
       return true;
     } catch (e) {
-      throw Exception('Error al editar producto en Firestore: $e');
+      throw Exception('Error editing product in Firestore: $e');
     }
   }
 }

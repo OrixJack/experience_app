@@ -1,4 +1,5 @@
 import 'package:experience_app/core/assets/app_fontSize.dart';
+import 'package:experience_app/core/navigation/router.dart';
 import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/data/repositories/products_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/presentation/widgets/add_edit_product_modal.dart';
@@ -18,6 +19,14 @@ class CrudProductsView extends ConsumerWidget {
           const SizedBox(height: 30),
           Row(
             children: [
+              const SizedBox(width: 20),
+              IconButton(
+                icon: const Icon(Icons.arrow_back, size: 30),
+                onPressed: () {
+                  router.goNamed(Routes.ecommerceDashboard);
+                },
+              ),
+              const SizedBox(width: 10),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30),
                 child: Text(

@@ -12,7 +12,6 @@ class ProcessPaymentRepositoryImpl extends ProcessPaymentRepository {
   Future<Map<String, dynamic>> processPayment(
     PaymentPayloadModel payload,
   ) async {
-    await Future.delayed(const Duration(seconds: 2));
     try {
       return await _remotePaymentDataSource.payment(payload.toJson());
     } catch (e) {

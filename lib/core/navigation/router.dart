@@ -7,6 +7,7 @@ import 'package:experience_app/features/create_prototype/presentation/views/paym
 import 'package:experience_app/features/users/presentation/views/login_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/personalize_experience.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/product_details_view.dart';
+import 'package:experience_app/features/create_prototype/presentation/views/sales_history_view.dart';
 import 'package:go_router/go_router.dart';
 
 final localStorage = LocalStorage();
@@ -72,6 +73,13 @@ final router = GoRouter(
         return const CrudProductsView();
       },
     ),
+    GoRoute(
+      name: Routes.salesHistory,
+      path: '/sales_history',
+      builder: (context, state) {
+        return const SalesHistoryView();
+      },
+    ),
   ],
 );
 
@@ -85,4 +93,5 @@ abstract class Routes {
   static const String login = 'login';
   static const String validateLogin = 'validate_login';
   static const String crudProducts = 'crud_products';
+  static const String salesHistory = 'sales_history';
 }

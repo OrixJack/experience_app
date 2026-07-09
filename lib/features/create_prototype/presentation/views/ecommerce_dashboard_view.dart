@@ -69,6 +69,17 @@ class IconNavigationWithCart extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: 30),
+        IconButton(
+          onPressed: () {
+            router.goNamed(Routes.salesHistory);
+          },
+          icon: SizedBox(
+            width: 24,
+            height: 24,
+            child: Image.asset(AppIcons.history, fit: BoxFit.contain),
+          ),
+        ),
+        const SizedBox(width: 30),
         Stack(
           children: [
             IconButton(

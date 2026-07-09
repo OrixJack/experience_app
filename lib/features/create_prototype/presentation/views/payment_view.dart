@@ -2,7 +2,11 @@ import 'package:experience_app/core/assets/app_colors.dart';
 import 'package:experience_app/core/navigation/router.dart';
 import 'package:experience_app/features/create_prototype/data/models/credit_card_model.dart';
 import 'package:experience_app/features/create_prototype/data/models/payment_payload_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/product_in_cart_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
+import 'package:experience_app/features/create_prototype/data/models/sale_model.dart';
 import 'package:experience_app/features/create_prototype/data/repositories/process_payment_repository_impl.dart';
+import 'package:experience_app/features/create_prototype/data/repositories/sales_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/presentation/providers/cart_provider.dart';
 import 'package:experience_app/features/create_prototype/presentation/providers/credit_card_provider.dart';
 import 'package:experience_app/features/create_prototype/presentation/widgets/add_credit_card_modal.dart';
@@ -290,6 +294,26 @@ class _PaymentViewState extends ConsumerState<PaymentView> {
         .processPayment(paymentData)
         .then((result) {
           if (result['status'] == 'approved') {
+            //guardar la venta en el historial de ventas
+            SalesRepositoryImpl().addSale(
+              SaleModel(
+                id: '',
+                idClient: 'client_id',
+                total: cartState.totalPrice,
+                date: DateTime.now().toIso8601String(),
+                moneda: selectedCard!.currency,
+                products: cartState.products,
+                discount: 0.0,
+                totalProducts: cartState.products.length,
+                typePayment: 1, // 1 para tarjeta de crédito
+                last4Digits: int.parse(
+                  selectedCard!.cardNumber.substring(
+                    selectedCard!.cardNumber.length - 4,
+                  ),
+                ),
+              ),
+            );
+
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(result['message']),

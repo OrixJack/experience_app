@@ -116,8 +116,8 @@ class ProductDetailsContent extends ConsumerStatefulWidget {
 }
 
 class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
-  late String _selectedSize;
-  late String _selectedColor;
+  String? _selectedSize;
+  String? _selectedColor;
 
   // Mapeo de nombres de colores a Color objects
   final Map<String, Color> colorMap = {
@@ -136,8 +136,12 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
   @override
   void initState() {
     super.initState();
-    _selectedSize = widget.product.sizes.first;
-    _selectedColor = widget.product.colors.first;
+    _selectedSize = widget.product.sizes.isNotEmpty
+        ? widget.product.sizes.first
+        : null;
+    _selectedColor = widget.product.colors.isNotEmpty
+        ? widget.product.colors.first
+        : null;
   }
 
   @override
@@ -178,95 +182,99 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
             ),
           ),
           const SizedBox(height: 30),
-          const Text(
-            'Size',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            height: 40,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.product.sizes.length,
-              itemBuilder: (context, index) {
-                final size = widget.product.sizes[index];
-                final isSelected = size == _selectedSize;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedSize = size;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 12),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      border: Border.all(
+          if (widget.product.sizes.isNotEmpty) ...[
+            const Text(
+              'Size',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 40,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.product.sizes.length,
+                itemBuilder: (context, index) {
+                  final size = widget.product.sizes[index];
+                  final isSelected = size == _selectedSize;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedSize = size;
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.btnBlue
+                              : Colors.grey[300]!,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
                         color: isSelected
                             ? AppColors.btnBlue
-                            : Colors.grey[300]!,
-                        width: 2,
+                            : Colors.transparent,
                       ),
-                      borderRadius: BorderRadius.circular(8),
-                      color: isSelected
-                          ? AppColors.btnBlue
-                          : Colors.transparent,
-                    ),
-                    child: Center(
-                      child: Text(
-                        size,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected ? Colors.white : Colors.black,
+                      child: Center(
+                        child: Text(
+                          size,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
-          const Text(
-            'Color',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            height: 40,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.product.colors.length,
-              itemBuilder: (context, index) {
-                final colorName = widget.product.colors[index];
-                final isSelected = colorName == _selectedColor;
-                final colorValue =
-                    colorMap[colorName.toLowerCase()] ?? Colors.grey;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedColor = colorName;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 12),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorValue,
-                      border: Border.all(
-                        color: isSelected ? AppColors.btnBlue : Colors.grey,
-                        width: isSelected ? 3 : 1,
+            const SizedBox(height: 30),
+          ],
+          if (widget.product.colors.isNotEmpty) ...[
+            const Text(
+              'Color',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 40,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.product.colors.length,
+                itemBuilder: (context, index) {
+                  final colorName = widget.product.colors[index];
+                  final isSelected = colorName == _selectedColor;
+                  final colorValue =
+                      colorMap[colorName.toLowerCase()] ?? Colors.grey;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedColor = colorName;
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 12),
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colorValue,
+                        border: Border.all(
+                          color: isSelected ? AppColors.btnBlue : Colors.grey,
+                          width: isSelected ? 3 : 1,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
+            const SizedBox(height: 30),
+          ],
           SizedBox(
             width: double.infinity,
             height: 56,
@@ -275,8 +283,8 @@ class _ProductDetailsContentState extends ConsumerState<ProductDetailsContent> {
                 final newProduct = ProductInCartModel(
                   product: widget.product,
                   quantity: 1,
-                  selectedSize: _selectedSize,
-                  selectedColor: _selectedColor.toString(),
+                  selectedSize: _selectedSize ?? '',
+                  selectedColor: _selectedColor ?? '',
                   tax: 0,
                   discount: 0,
                   subtotal: widget.product.price,
