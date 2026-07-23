@@ -1,3 +1,9 @@
+import 'dart:typed_data';
+
+import 'package:experience_app/core/assets/app_colors.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../data/repositories/local_image_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/data/repositories/products_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/crud_products_view.dart';
@@ -19,6 +25,8 @@ class AddEditProductModal extends ConsumerStatefulWidget {
 
 class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
   final _formKey = GlobalKey<FormState>();
+  XFile? _imageFile;
+  Uint8List? _imageBytes; // Para almacenar bytes de imagen en web
   late TextEditingController _nameController;
   late TextEditingController _priceController;
   late TextEditingController _imageUrlController;
@@ -26,6 +34,8 @@ class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
   late TextEditingController _descriptionController;
 
   bool _isLoading = false;
+  bool _hasNewImage = false; // Indica si se seleccionó una imagen nueva
+
   AsyncValue<List<ProductModel>> get productsAsyncValue =>
       ref.watch(productsProvider);
   bool get isEditMode => widget.isEditMode;
@@ -60,6 +70,19 @@ class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
 
   Future<void> _addProduct() async {
     if (_formKey.currentState!.validate()) {
+      // Validar que se haya seleccionado una imagen
+      if (_imageFile == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Por favor selecciona una imagen para el producto'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
       setState(() {
         _isLoading = true;
       });
@@ -73,7 +96,7 @@ class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
           description: _descriptionController.text,
         );
 
-        await ProductsRepositoryImpl().addProduct(newProduct);
+        await ProductsRepositoryImpl().addProduct(newProduct, _imageFile!);
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -131,13 +154,6 @@ class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
           );
           widget.onProductChange?.call();
           Navigator.of(context).pop();
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Error al actualizar producto'),
-              backgroundColor: Colors.red,
-            ),
-          );
         }
       } catch (e) {
         if (mounted) {
@@ -157,6 +173,70 @@ class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
         }
       }
     }
+  }
+
+  Widget _buildImagePreview() {
+    // Mostrar preview de imagen nueva en web
+    if (_hasNewImage && _imageBytes != null) {
+      return Image.memory(
+        _imageBytes!,
+        height: 150,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    }
+
+    // Mostrar URL existente
+    if (_imageUrlController.text.isNotEmpty && !_hasNewImage) {
+      return Image.network(
+        _imageUrlController.text,
+        height: 150,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            height: 150,
+            width: double.infinity,
+            color: Colors.grey[300],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.broken_image, size: 50, color: Colors.red),
+                const SizedBox(height: 8),
+                const Text(
+                  'Error al cargar imagen',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ],
+            ),
+          );
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            height: 150,
+            width: double.infinity,
+            color: Colors.grey[300],
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    // Mostrar placeholder
+    return Container(
+      height: 150,
+      width: double.infinity,
+      color: Colors.grey[300],
+      child: const Icon(Icons.image, size: 50, color: Colors.white),
+    );
   }
 
   @override
@@ -206,27 +286,42 @@ class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _imageUrlController,
-                decoration: InputDecoration(
-                  labelText: 'Image URL',
-                  hintText: 'Enter image URL',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+              Stack(
+                children: [
+                  _buildImagePreview(),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: AppColors.blueSky,
+                        shape: BoxShape.circle,
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          _imageFile = await LocalImageRepositoryImpl()
+                              .saveLocalImage();
+                          if (_imageFile != null) {
+                            // Obtener bytes para preview en web
+                            if (kIsWeb) {
+                              _imageBytes = await _imageFile!.readAsBytes();
+                            }
+                            setState(() {
+                              _hasNewImage = true;
+                              // En web, no mostramos el path, solo los bytes
+                              if (!kIsWeb) {
+                                _imageUrlController.text = _imageFile!.path;
+                              }
+                            });
+                          }
+                        },
+                        child: const Icon(Icons.edit, color: Colors.white),
+                      ),
+                    ),
                   ),
-                  prefixIcon: const Icon(Icons.image),
-                ),
-                keyboardType: TextInputType.url,
-                maxLength: 200,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Image URL is required';
-                  }
-                  if (value.length < 2) {
-                    return 'Please enter a valid image URL';
-                  }
-                  return null;
-                },
+                ],
               ),
               const SizedBox(height: 16),
               Row(

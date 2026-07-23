@@ -1,4 +1,5 @@
 import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 interface class ProductDataSource {
   ProductDataSource();
@@ -7,7 +8,7 @@ interface class ProductDataSource {
     return [];
   }
 
-  Future<bool> addProduct(ProductModel product) async {
+  Future<bool> addProduct(ProductModel product, XFile image) async {
     return false;
   }
 

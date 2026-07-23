@@ -4,6 +4,7 @@ import 'package:experience_app/features/create_prototype/presentation/views/cart
 import 'package:experience_app/features/create_prototype/presentation/views/crud_products_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/ecommerce_dashboard_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/payment_view.dart';
+import 'package:experience_app/features/create_prototype/presentation/views/sales_error_history_view.dart';
 import 'package:experience_app/features/users/presentation/views/login_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/personalize_experience.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/product_details_view.dart';
@@ -77,14 +78,14 @@ final router = GoRouter(
       name: Routes.salesHistory,
       path: '/sales_history',
       builder: (context, state) {
-        return const SalesHistoryView('success');
+        return const SalesHistoryView();
       },
     ),
     GoRoute(
       name: Routes.salesHistoryFailed,
       path: '/sales_history_failed',
       builder: (context, state) {
-        return const SalesHistoryView('failed');
+        return const SalesErrorHistoryView();
       },
     ),
   ],

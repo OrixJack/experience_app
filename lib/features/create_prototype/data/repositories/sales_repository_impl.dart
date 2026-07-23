@@ -7,13 +7,13 @@ class SalesRepositoryImpl extends SalesRepository {
       FirebaseSaleDataSource();
 
   @override
-  Future<List<SaleModel>> getSalesHistory(String idClient) async {
-    return await firebaseSaleDataSource.history(idClient);
+  Stream<List<SaleModel>> getSalesHistory(String idClient) {
+    return firebaseSaleDataSource.history(idClient);
   }
 
   @override
-  Future<List<SaleModel>> getSalesHistoryFailed(String idClient) async {
-    return await firebaseSaleDataSource.historyFailed(idClient);
+  Stream<List<SaleModel>> getSalesHistoryFailed(String idClient) {
+    return firebaseSaleDataSource.historyFailed(idClient);
   }
 
   @override

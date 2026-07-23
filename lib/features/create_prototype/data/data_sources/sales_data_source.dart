@@ -3,8 +3,8 @@ import 'package:experience_app/features/create_prototype/data/models/sale_model.
 interface class SalesDataSource {
   SalesDataSource();
 
-  Future<List<SaleModel>> history(String idClient) async {
-    return [];
+  Stream<List<SaleModel>> history(String idClient) async* {
+    yield [];
   }
 
   Future<SaleModel> getSale(String idClient) async {
@@ -21,8 +21,8 @@ interface class SalesDataSource {
     );
   }
 
-  Future<List<SaleModel>> historyFailed(String idClient) async {
-    return [];
+  Stream<List<SaleModel>> historyFailed(String idClient) async* {
+    yield [];
   }
 
   Future<bool> addSale(SaleModel sale) async {

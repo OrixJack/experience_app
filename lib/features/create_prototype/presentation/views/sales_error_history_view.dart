@@ -1,17 +1,17 @@
 import 'package:experience_app/core/assets/app_fontSize.dart';
 import 'package:experience_app/core/navigation/router.dart';
-import 'package:experience_app/features/create_prototype/presentation/providers/sales_provider.dart';
-import 'package:experience_app/features/create_prototype/presentation/states/sales_state.dart';
+import 'package:experience_app/features/create_prototype/presentation/providers/sales_error_provider.dart';
+import 'package:experience_app/features/create_prototype/presentation/states/sales_error_state.dart';
 import 'package:experience_app/features/create_prototype/presentation/widgets/detail_sale_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SalesHistoryView extends ConsumerWidget {
-  const SalesHistoryView({super.key});
+class SalesErrorHistoryView extends ConsumerWidget {
+  const SalesErrorHistoryView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final salesAsyncValue = ref.watch(salesProvider);
+    final salesAsyncValue = ref.watch(salesErrorProvider);
 
     return Scaffold(
       body: ListView(
@@ -23,27 +23,20 @@ class SalesHistoryView extends ConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.arrow_back, size: 30),
                 onPressed: () {
-                  router.goNamed(Routes.ecommerceDashboard);
+                  router.goNamed(Routes.salesHistory);
                 },
               ),
               const SizedBox(width: 10),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30),
                 child: Text(
-                  'Sales History',
+                  'Failed Sales History',
                   style: TextStyle(
                     fontSize: AppFontSize.title,
                     color: Colors.black,
                     fontWeight: AppFontSize.wtitle,
                   ),
                 ),
-              ),
-              const SizedBox(width: 20),
-              IconButton(
-                icon: const Icon(Icons.error, size: 30),
-                onPressed: () {
-                  router.goNamed(Routes.salesHistoryFailed);
-                },
               ),
             ],
           ),
@@ -60,7 +53,15 @@ class SalesHistoryView extends ConsumerWidget {
                   final sale = sales[index];
                   return ListTile(
                     title: Text('Sale ID: ${sale.id}'),
-                    subtitle: Text('Client ID: ${sale.idClient}'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Client ID: ${sale.idClient}'),
+                        Text('Reason: ${sale.errorMessage}'),
+                        Text('Card: **** **** **** ${sale.last4Digits}'),
+                      ],
+                    ),
+                    subtitleTextStyle: const TextStyle(color: Colors.red),
                     trailing: Text('Total: ${sale.total.toStringAsFixed(2)}'),
                     onTap: () {
                       showModalBottomSheet(

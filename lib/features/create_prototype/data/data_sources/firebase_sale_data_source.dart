@@ -47,27 +47,22 @@ class FirebaseSaleDataSource implements SalesDataSource {
   }
 
   @override
-  Future<List<SaleModel>> history(String idClient) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection(Consts.salesCollection)
-          .where('idClient', isEqualTo: idClient)
-          .orderBy('date', descending: true)
-          .get();
-
-      final sales = querySnapshot.docs.map((doc) {
-        final data = doc.data();
-        return SaleModel.fromJson({...data, 'id': doc.id});
-      }).toList();
-
-      return sales;
-    } catch (e) {
-      throw Exception('Error getting Sales from Firestore: $e');
-    }
+  Stream<List<SaleModel>> history(String idClient) {
+    return _firestore
+        .collection(Consts.salesCollection)
+        .where('idClient', isEqualTo: idClient)
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((querySnapshot) {
+          return querySnapshot.docs.map((doc) {
+            final data = doc.data();
+            return SaleModel.fromJson({...data, 'id': doc.id});
+          }).toList();
+        });
   }
 
   @override
-  Future<List<SaleModel>> historyFailed(String idClient) async {
+  Stream<List<SaleModel>> historyFailed(String idClient) async* {
     try {
       final querySnapshot = await _firestore
           .collection(Consts.salesErrorCollection)
@@ -80,7 +75,7 @@ class FirebaseSaleDataSource implements SalesDataSource {
         return SaleModel.fromJson({...data, 'id': doc.id});
       }).toList();
 
-      return sales;
+      yield sales;
     } catch (e) {
       throw Exception('Error getting Sales from Firestore: $e');
     }
