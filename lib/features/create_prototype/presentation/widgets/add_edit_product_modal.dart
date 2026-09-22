@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:experience_app/core/assets/app_colors.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +6,7 @@ import '../../data/repositories/local_image_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/data/repositories/products_repository_impl.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/crud_products_view.dart';
+import 'package:experience_app/features/create_prototype/presentation/widgets/product_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -188,8 +188,8 @@ class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
 
     // Mostrar URL existente
     if (_imageUrlController.text.isNotEmpty && !_hasNewImage) {
-      return Image.network(
-        _imageUrlController.text,
+      return ProductImage(
+        imageUrl: _imageUrlController.text,
         height: 150,
         width: double.infinity,
         fit: BoxFit.cover,
@@ -198,12 +198,12 @@ class _AddEditProductModalState extends ConsumerState<AddEditProductModal> {
             height: 150,
             width: double.infinity,
             color: Colors.grey[300],
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.broken_image, size: 50, color: Colors.red),
-                const SizedBox(height: 8),
-                const Text(
+                Icon(Icons.broken_image, size: 50, color: Colors.red),
+                SizedBox(height: 8),
+                Text(
                   'Error al cargar imagen',
                   style: TextStyle(color: Colors.red),
                 ),

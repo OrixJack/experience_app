@@ -16,14 +16,14 @@ class EcommerceDashboardView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: ListView(
-        children: [
-          const SizedBox(height: 30),
-          const IconNavigationWithCart(),
-          const SizedBox(height: 30),
-          const ItemsCarrousel(),
-          const SizedBox(height: 30),
-          CategoryCarrousel(title: 'Perfect for you'),
-          const SizedBox(height: 30),
+        children: const [
+          SizedBox(height: 30),
+          IconNavigationWithCart(),
+          SizedBox(height: 30),
+          ItemsCarrousel(),
+          SizedBox(height: 30),
+          CategoryCarrousel(title: 'Perfect for you - Android'),
+          SizedBox(height: 30),
           CategoryCarrousel(title: 'For this summer'),
         ],
       ),
@@ -168,7 +168,7 @@ final productsProvider = FutureProvider.autoDispose<List<ProductModel>>((
 });
 
 class CategoryCarrousel extends ConsumerWidget {
-  CategoryCarrousel({super.key, required this.title});
+  const CategoryCarrousel({super.key, required this.title});
 
   final String title;
 

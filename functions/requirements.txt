@@ -1,0 +1,3 @@
+# Cloud Functions (Python) para jo-experience-app
+firebase-functions>=0.4.2
+firebase-admin>=6.5.0

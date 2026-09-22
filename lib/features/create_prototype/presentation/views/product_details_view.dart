@@ -2,6 +2,7 @@ import 'package:experience_app/core/assets/app_colors.dart';
 import 'package:experience_app/features/create_prototype/data/models/product_in_cart_model.dart';
 import 'package:experience_app/features/create_prototype/data/models/product_model.dart';
 import 'package:experience_app/features/create_prototype/presentation/providers/cart_provider.dart';
+import 'package:experience_app/features/create_prototype/presentation/widgets/product_image.dart';
 import 'package:flutter/material.dart';
 import 'package:experience_app/core/navigation/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,7 +58,10 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
             },
             itemCount: 4,
             itemBuilder: (context, index) {
-              return Image.network(widget.product.imageUrl, fit: BoxFit.cover);
+              return ProductImage(
+                imageUrl: widget.product.imageUrl,
+                fit: BoxFit.cover,
+              );
             },
           ),
         ),

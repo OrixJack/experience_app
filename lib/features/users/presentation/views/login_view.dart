@@ -1,7 +1,9 @@
 import 'package:experience_app/core/assets/app_colors.dart';
 import 'package:experience_app/core/assets/app_fontSize.dart';
 import 'package:experience_app/core/navigation/router.dart';
+import 'package:experience_app/core/notifications/presentation/providers/notification_providers.dart';
 import 'package:experience_app/features/users/presentation/providers/login_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -89,6 +91,15 @@ class LoginView extends ConsumerWidget {
                           final notifier = ref.read(loginProvider.notifier);
                           final success = await notifier
                               .loginWithEmailAndPassword();
+                          if (success) {
+                            // Registra el token FCM de este dispositivo para
+                            // que reciba las notificaciones de nuevas ventas.
+                            final userId =
+                                FirebaseAuth.instance.currentUser?.uid;
+                            if (userId != null) {
+                              ref.read(fcmTokenProvider(userId));
+                            }
+                          }
                           if (success && context.mounted) {
                             router.goNamed(Routes.ecommerceDashboard);
                           }

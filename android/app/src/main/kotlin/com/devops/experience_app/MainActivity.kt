@@ -1,4 +1,4 @@
-package com.example.experience_app
+package com.devops.experience_app
 
 import io.flutter.embedding.android.FlutterActivity
 

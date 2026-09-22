@@ -1,4 +1,5 @@
 import 'package:experience_app/core/assets/app_colors.dart';
+import 'package:experience_app/features/create_prototype/presentation/widgets/product_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,7 +32,7 @@ class ProductWidget extends ConsumerWidget {
               SizedBox(
                 width: 200,
                 height: 120,
-                child: Image.network(imageUrl, fit: BoxFit.cover),
+                child: ProductImage(imageUrl: imageUrl, fit: BoxFit.cover),
               ),
               const SizedBox(height: 10),
               Padding(

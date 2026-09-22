@@ -11,7 +11,7 @@ final salesErrorProvider =
 class SalesErrorNotifier extends StateNotifier<SalesErrorState> {
   SalesErrorNotifier({SalesRepositoryImpl? getSalesStreamUseCase})
     : _getSalesStreamUseCase = getSalesStreamUseCase ?? SalesRepositoryImpl(),
-      super(SalesErrorState.initial()) {
+      super(const SalesErrorState.initial()) {
     initSubscription();
   }
 
@@ -20,7 +20,7 @@ class SalesErrorNotifier extends StateNotifier<SalesErrorState> {
   StreamSubscription? _subscription;
 
   Future<void> initSubscription() async {
-    state = SalesErrorState.loading(sales: []);
+    state = const SalesErrorState.loading(sales: []);
 
     try {
       _subscription = _getSalesStreamUseCase
@@ -30,7 +30,7 @@ class SalesErrorNotifier extends StateNotifier<SalesErrorState> {
           });
     } catch (e) {
       state = SalesErrorState.error(
-        message: 'Error al cargar compras fallidas: ' + e.toString(),
+        message: 'Error al cargar compras fallidas: $e',
       );
     }
   }

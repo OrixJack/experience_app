@@ -10,7 +10,7 @@ final salesProvider = StateNotifierProvider<SalesNotifier, SalesState>(
 class SalesNotifier extends StateNotifier<SalesState> {
   SalesNotifier({SalesRepositoryImpl? getSalesStreamUseCase})
     : _getSalesStreamUseCase = getSalesStreamUseCase ?? SalesRepositoryImpl(),
-      super(SalesState.initial()) {
+      super(const SalesState.initial()) {
     initSubscription();
   }
 
@@ -19,7 +19,7 @@ class SalesNotifier extends StateNotifier<SalesState> {
   StreamSubscription? _subscription;
 
   Future<void> initSubscription() async {
-    state = SalesState.loading(sales: []);
+    state = const SalesState.loading(sales: []);
 
     try {
       _subscription = _getSalesStreamUseCase
@@ -28,7 +28,7 @@ class SalesNotifier extends StateNotifier<SalesState> {
             state = SalesState.loaded(sales: sales);
           });
     } catch (e) {
-      state = SalesState.error(message: 'Error al cargar ventas realizadas');
+      state = const SalesState.error(message: 'Error al cargar ventas realizadas');
     }
   }
 

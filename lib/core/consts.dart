@@ -13,4 +13,5 @@ abstract class Consts {
   static const String salesCollection = 'sales';
   static const String productsCollection = 'products';
   static const String salesErrorCollection = 'error_sales';
+  static const String fcmTokensCollection = 'fcm_tokens';
 }
