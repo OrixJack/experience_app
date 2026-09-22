@@ -10,7 +10,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Future<bool> requestPermission() => _dataSource.requestPermission();
-
+ 
   @override
   Future<String?> getFCMToken() => _dataSource.getFCMToken();
 

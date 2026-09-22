@@ -61,6 +61,9 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
               return ProductImage(
                 imageUrl: widget.product.imageUrl,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => const Center(
+                  child: Icon(Icons.broken_image_outlined),
+                ),
               );
             },
           ),

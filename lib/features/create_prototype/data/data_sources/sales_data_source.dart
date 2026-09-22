@@ -7,9 +7,10 @@ interface class SalesDataSource {
     yield [];
   }
 
-  Future<SaleModel> getSale(String idClient) async {
+  Future<SaleModel> getSale(String idSale) async {
     return SaleModel(
-      idClient: idClient,
+      id: idSale,
+      idClient: '',
       total: 0.0,
       date: '',
       moneda: '',

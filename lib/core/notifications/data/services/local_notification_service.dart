@@ -1,8 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-/// Envuelve `flutter_local_notifications` para mostrar una notificación del
-/// sistema cuando FCM entrega un mensaje mientras la app está en primer
-/// plano (Android/iOS no la muestran automáticamente en ese caso).
+/// mostrar alerta cuando se esta abierta la app
 class LocalNotificationService {
   LocalNotificationService._();
 
@@ -21,6 +19,11 @@ class LocalNotificationService {
 
   bool _initialized = false;
 
+  /// Se invoca cuando el usuario toca una notificación local (mostrada
+  /// mientras la app estaba en primer plano). Recibe el `payload` pasado a
+  /// [show], que aquí se usa para llevar el saleId.
+  void Function(String? payload)? onNotificationTap;
+
   Future<void> initialize() async {
     if (_initialized) return;
 
@@ -33,7 +36,12 @@ class LocalNotificationService {
       iOS: iosSettings,
     );
 
-    await _plugin.initialize(settings: settings);
+    await _plugin.initialize(
+      settings: settings,
+      onDidReceiveNotificationResponse: (response) {
+        onNotificationTap?.call(response.payload);
+      },
+    );
 
     await _plugin
         .resolvePlatformSpecificImplementation<
@@ -44,7 +52,11 @@ class LocalNotificationService {
     _initialized = true;
   }
 
-  Future<void> show({required String title, required String body}) async {
+  Future<void> show({
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
     await initialize();
 
     final androidDetails = AndroidNotificationDetails(
@@ -65,6 +77,7 @@ class LocalNotificationService {
       title: title,
       body: body,
       notificationDetails: details,
+      payload: payload,
     );
   }
 }

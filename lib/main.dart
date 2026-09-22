@@ -10,12 +10,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
 
-/// Handler de mensajes en segundo plano — debe ser una función top-level
-/// (o estática) marcada con @pragma('vm:entry-point') para que Flutter la
-/// pueda invocar cuando la app está cerrada o en background.
+
 @pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Firebase ya está inicializado cuando este handler se invoca.
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
+
+void _navigateToSaleFromNotificationData(Map<String, dynamic> data) {
+  final saleId = data['saleId'];
+  if (saleId != null && saleId is String && saleId.isNotEmpty) {
+    router.push('/sale_detail/$saleId');
+  }
 }
 
 void main() async {
@@ -33,6 +36,25 @@ void main() async {
           badge: true,
           sound: true,
         );
+
+    // App en background y el usuario toca la notificación del sistema.
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      _navigateToSaleFromNotificationData(message.data);
+    });
+
+    // App cerrada (terminated) y se abre tocando la notificación.
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      _navigateToSaleFromNotificationData(initialMessage.data);
+    }
+
+    // App en primer plano: la notificación local mostrada manualmente
+    // también debe navegar al detalle cuando se toca.
+    LocalNotificationService.instance.onNotificationTap = (payload) {
+      if (payload != null && payload.isNotEmpty) {
+        router.push('/sale_detail/$payload');
+      }
+    };
   }
 
   // Initialize LocalStorage
@@ -81,6 +103,7 @@ class _MainAppState extends ConsumerState<MainApp> {
               ? notification.title
               : 'Nueva venta registrada',
           body: notification.body,
+          payload: notification.data?['saleId'] as String?,
         );
       });
     });

@@ -82,21 +82,19 @@ class FirebaseSaleDataSource implements SalesDataSource {
   }
 
   @override
-  Future<SaleModel> getSale(String idClient) async {
+  Future<SaleModel> getSale(String idSale) async {
     try {
-      final querySnapshot = await _firestore
+      final result = await _firestore
           .collection(Consts.salesCollection)
-          .where('idClient', isEqualTo: idClient)
-          .limit(1)
+          .doc(idSale)
           .get();
 
-      if (querySnapshot.docs.isEmpty) {
-        throw Exception('Not found sale for client $idClient');
+      if (!result.exists) {
+        throw Exception('Not found sale with id $idSale');
       }
 
-      final doc = querySnapshot.docs.first;
-      final data = doc.data();
-      return SaleModel.fromJson({...data, 'id': doc.id});
+      final data = result.data()!;
+      return SaleModel.fromJson({...data, 'id': result.id});
     } catch (e) {
       throw Exception('Error getting Sale from Firestore: $e');
     }

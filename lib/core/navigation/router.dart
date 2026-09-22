@@ -8,6 +8,7 @@ import 'package:experience_app/features/create_prototype/presentation/views/sale
 import 'package:experience_app/features/users/presentation/views/login_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/personalize_experience.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/product_details_view.dart';
+import 'package:experience_app/features/create_prototype/presentation/views/sale_detail_view.dart';
 import 'package:experience_app/features/create_prototype/presentation/views/sales_history_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -88,6 +89,14 @@ final router = GoRouter(
         return const SalesErrorHistoryView();
       },
     ),
+    GoRoute(
+      name: Routes.saleDetail,
+      path: '/sale_detail/:saleId',
+      builder: (context, state) {
+        final saleId = state.pathParameters['saleId']!;
+        return SaleDetailView(saleId: saleId);
+      },
+    ),
   ],
 );
 
@@ -103,4 +112,5 @@ abstract class Routes {
   static const String crudProducts = 'crud_products';
   static const String salesHistory = 'sales_history';
   static const String salesHistoryFailed = 'sales_history_failed';
+  static const String saleDetail = 'sale_detail';
 }

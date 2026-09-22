@@ -32,7 +32,13 @@ class ProductWidget extends ConsumerWidget {
               SizedBox(
                 width: 200,
                 height: 120,
-                child: ProductImage(imageUrl: imageUrl, fit: BoxFit.cover),
+                child: ProductImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.broken_image_outlined),
+                  ),
+                ),
               ),
               const SizedBox(height: 10),
               Padding(
